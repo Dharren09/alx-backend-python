@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """funstion that takes an arg n and returns a string rep. of the float"""
 
 
