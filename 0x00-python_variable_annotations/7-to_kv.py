@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""function takes in a str and an int or float as arg and return a tuple"""
+"""function takes in a str and an int or float as arg and
+returns a tuple"""
 
 from typing import Union
 

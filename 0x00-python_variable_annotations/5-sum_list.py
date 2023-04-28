@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""function takes a list of floats as arg and returns their sum as a float"""
+"""function takes a list of floats as arg and
+returns their sum as a float"""
 
 from typing import List
 
