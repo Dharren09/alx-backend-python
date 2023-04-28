@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """Augments a code with correct duck-typed annotations"""
 
 from typing import Sequence, Any, Union
