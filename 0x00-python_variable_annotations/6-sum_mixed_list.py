@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """function takes a list of integers and returns the sum of floats"""
 
 from typing import List, Union
