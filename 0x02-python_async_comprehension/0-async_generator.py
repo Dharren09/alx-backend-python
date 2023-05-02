@@ -11,4 +11,4 @@ async def async_generator():
         """each time synchronously waits 1 sec"""
         await asyncio.sleep(i)
         """then yeilds a random number btn 0  and 10"""
-        yield random.randint(0, 10) 
+        yield random.randint(0, 10)
