@@ -56,7 +56,7 @@ class TestGithubOrgClient(unittest.TestCase):
         """Patch the _public_repos_url property of GithubOrgClient
         with a PropertyMock"""
         with patch("client.GithubOrgClient._public_repos_url", PropertyMock(
-                return_value=result)) as mock_repo:
+                    return_value=result)) as mock_repo:
             """create an instance of GithubOrgClient"""
             obj = GithubOrgClient("LinkedIn")
             self.assertEqual(obj._public_repos_url, result)
