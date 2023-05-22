@@ -60,3 +60,13 @@ class TestGithubOrgClient(unittest.TestCase):
             """create an instance of GithubOrgClient"""
             obj = GithubOrgClient("LinkedIn")
             self.assertEqual(obj._public_repos_url, result)
+
+    @parameterized.expand([
+        ({"license": {"key": "my_license"}}, "my_license", True),
+        ({"license": {"key": "other_license"}}, "my_license", False)
+    ])
+    def test_has_license(self, repo: Dict[str, Dict],
+                         license_key: str, expected: bool):
+        """tests license"""
+        self.assertEqual(GithubOrgClient.has_license(repo, license_key),
+                         expected)
