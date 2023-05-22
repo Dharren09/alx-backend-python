@@ -2,7 +2,7 @@
 
 import unittest
 from unittest.mock import patch, Mock, PropertyMock, call
-from parameterized import parameterized
+from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
 from requests import HTTPError
@@ -56,7 +56,7 @@ class TestGithubOrgClient(unittest.TestCase):
         """Patch the _public_repos_url property of GithubOrgClient
         with a PropertyMock"""
         with patch("client.GithubOrgClient._public_repos_url", PropertyMock(
-                    return_value=result)) as mock_repo:
+                return_value=result)) as mock_repo:
             """create an instance of GithubOrgClient"""
             obj = GithubOrgClient("LinkedIn")
             self.assertEqual(obj._public_repos_url, result)
@@ -70,3 +70,68 @@ class TestGithubOrgClient(unittest.TestCase):
         """tests license"""
         self.assertEqual(GithubOrgClient.has_license(repo, license_key),
                          expected)
+
+
+@parameterized_class(
+    ("org_payload", "repos_payload", "expected_repos", "apache2_repos"),
+    TEST_PAYLOAD
+)
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """Implement intergration test for public_repos method"""
+
+    @classmethod
+    def setUpClass(cls):
+        """Prepare to test, Extract the neccessary payloads
+        from TEST_PAYLOAD"""
+        org = TEST_PAYLOAD[0][0]
+        repos = TEST_PAYLOAD[0][1]
+
+        """Create mock objects for org and repos payloads"""
+        org_mock = Mock()
+        org_mock.json = Mock(return_value=org)
+        cls.org_mock = org_mock
+
+        repos_mock = Mock()
+        repos_mock.json = Mock(return_value=repos)
+        cls.repos_mock = repos_mock
+
+        """Patch the 'requests.get' function to return the
+        appropriate mock objects"""
+        cls.get_patcher = patch('requests.get')
+        cls.get = cls.get_patcher.start()
+        options = {cls.org_payload["repos_url"]: repos_mock}
+        cls.get.side_effect = lambda y: options.get(y, org_mock)
+
+    @classmethod
+    def tearDownClass(cls):
+        """ unprepare for testing """
+        cls.get_patcher.stop()
+
+    def test_public_repos(self):
+        """ public repos test, create an instance of GithubOrgClient """
+        y = GithubOrgClient("x")
+
+        """Assert the org payload, repos payload, and expected repos"""
+        self.assertEqual(y.org, self.org_payload)
+        self.assertEqual(y.repos_payload, self.repos_payload)
+        self.assertEqual(y.public_repos(), self.expected_repos)
+        self.assertEqual(y.public_repos("NONEXISTENT"), [])
+
+        """Assert the calls made to requests.get"""
+        self.get.assert_has_calls([call("https://api.github.com/orgs/x"),
+                                   call(self.org_payload["repos_url"])])
+
+    def test_public_repos_with_license(self):
+        """ public repos test """
+        y = GithubOrgClient("x")
+
+        """Assert the org payload, repos payload, and expected repos"""
+        self.assertEqual(y.org, self.org_payload)
+        self.assertEqual(y.repos_payload, self.repos_payload)
+        self.assertEqual(y.public_repos(), self.expected_repos)
+        self.assertEqual(y.public_repos("NONEXISTENT"), [])
+        self.assertEqual(y.public_repos("apache-2.0"), self.apache2_repos)
+
+        """Assert the calls made to requests.get"""
+        self.get.assert_has_calls([call("https://api.github.com/orgs/x"),
+                                   call(self.org_payload["repos_url"])])
