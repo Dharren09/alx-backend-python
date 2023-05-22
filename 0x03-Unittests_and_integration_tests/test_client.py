@@ -28,3 +28,15 @@ class TestGithubOrgClient(unittest.TestCase):
         """Assert that get_json was called once with the expected argument"""
         mock_org.assert_called_once_with(
             'https://api.github.com/orgs/' + org_name)
+
+    def test_public_repos_url(self):
+        """Method tests _public_repos_url.
+        defining the expected result"""
+        expected = "https://api.github.com/orgs/repo"
+        """define the payload for the mocked org property"""
+        payload = {"repos_url": "https://api.github.com/orgs/repo"}
+        with patch('client.GithubOrgClient.org', PropertyMock(
+                    return_value=payload)):
+            """create an instance of GithugOrgClient"""
+            obj = GithubOrgClient("LinkedIn")
+            self.assertEqual(obj._public_repos_url, expected)
