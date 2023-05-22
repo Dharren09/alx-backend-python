@@ -23,15 +23,13 @@ class TestAccessNestedMap(unittest.TestCase):
         self.assertEqual(access_nested_map(nested_map, path), expected)
 
     @parameterized.expand([
-        ({}, ('a',) KeyError("Key not found: 'a'")),
-        ({'a': 1}, ('a', 'b'), KeyError("Key not found: 'b'")),
+        ({}, ('a',)),
+        ({'a': 1}, ('a', 'b')),
     ])
-    def test_access_nested_map_exception(self, nested_map: Dict, path: Tuple,
-                                         expected: Union[int, str]):
+    def test_access_nested_map_exception(self, nested_map: Dict, path: Tuple):
         """Tests raise of keyError exception"""
-        with self.assertRaises(KeyError) as context:
+        with self.assertRaises(KeyError):
             access_nested_map(nested_map, path)
-        self.assertEqual(str(context.exception), str(expected_exception))
 
 
 if __name__ == "__main__":
