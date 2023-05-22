@@ -3,10 +3,10 @@
 the body of the test method should not be longer than 2 lines"""
 
 import unittest
-from parameterized import parameterized
-from utils import access_nested_map
 from unittest.mock import patch, Mock
+from parameterized import parameterized
 from typing import Dict, Tuple, Union
+access_nested_map = __import__("utils").access_nested_map
 
 
 class TestAccessNestedMap(unittest.TestCase):
@@ -18,6 +18,8 @@ class TestAccessNestedMap(unittest.TestCase):
     ])
     def test_access_nested_map(self, nested_map: Dict, path: Tuple,
                                expected: Union[int, str]):
+        """asserting the function that returns the expected result or
+        AssertError is otherwise"""
         self.assertEqual(access_nested_map(nested_map, path), expected)
 
 
