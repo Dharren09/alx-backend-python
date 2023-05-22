@@ -1,4 +1,4 @@
-#!//usr/bin/env python3
+#!/usr/bin/env python3
 """uses a function, plays with the python console and tests the method
 the body of the test method should not be longer than 2 lines"""
 
