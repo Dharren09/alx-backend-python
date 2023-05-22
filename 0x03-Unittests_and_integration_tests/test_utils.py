@@ -8,6 +8,7 @@ from parameterized import parameterized
 from typing import Dict, Tuple, Union
 access_nested_map = __import__("utils").access_nested_map
 get_json = __import__("utils").get_json
+memoize = __import__("utils").memoize
 
 
 class TestAccessNestedMap(unittest.TestCase):
@@ -54,6 +55,39 @@ class TestGetJson(unittest.TestCase):
             result = get_json(test_url)
             self.assertEqual(result, expected)
             mock_request.assert_called_once()
+
+
+class TestMemoize(unittest.TestCase):
+    """defines the test class which tests memoize function"""
+
+    def test_memoize(self):
+        """Tests memoize function"""
+        class TestClass:
+            """Test class"""
+
+            def a_method(self):
+                """Returns 42"""
+                return 42
+
+            @memoize
+            def a_property(self):
+                """Returns memoized property"""
+                return self.a_method()
+
+        """patch the a_method of the TestClass with  a mock method then
+        returns 42"""
+        with patch.object(TestClass, "a_method",
+                          return_value=42) as mock_method:
+            """creates an instance for the TestClass"""
+            test_class = TestClass()
+            """calls the a_property of the test_class for the first time"""
+            result = test_class.a_property
+            """calls it for the sceond time"""
+            result = test_class.a_property
+            """assert that the result is equal to 42"""
+            self.assertEqual(result, 42)
+            """assert that the mocked a_method was called once"""
+            mock_method.assert_called_once()
 
 
 if __name__ == "__main__":
