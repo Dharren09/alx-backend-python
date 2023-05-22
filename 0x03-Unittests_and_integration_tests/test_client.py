@@ -36,7 +36,7 @@ class TestGithubOrgClient(unittest.TestCase):
         """define the payload for the mocked org property"""
         payload = {"repos_url": "https://api.github.com/orgs/repo"}
         with patch('client.GithubOrgClient.org', PropertyMock(
-                    return_value=payload)):
+                return_value=payload)):
             """create an instance of GithugOrgClient"""
             obj = GithubOrgClient("LinkedIn")
             self.assertEqual(obj._public_repos_url, expected)
@@ -49,12 +49,14 @@ class TestGithubOrgClient(unittest.TestCase):
         """configure the mock object to return the expected result"""
         mock_obj.return_value = expected
 
-        """Define the expected result for the mocked _public_repos_url property"""
+        """Define the expected result for the mocked
+        public_repos_url property"""
         result = "github.com/LinkedIn"
-        
-        """Patch the _public_repos_url property of GithubOrgClient with a PropertyMock"""
+
+        """Patch the _public_repos_url property of GithubOrgClient
+        with a PropertyMock"""
         with patch("client.GithubOrgClient._public_repos_url", PropertyMock(
-                    return_value=result)) as mock_repo:
+                return_value=result)) as mock_repo:
             """create an instance of GithubOrgClient"""
             obj = GithubOrgClient("LinkedIn")
             self.assertEqual(obj._public_repos_url, result)
